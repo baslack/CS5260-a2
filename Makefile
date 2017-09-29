@@ -1,0 +1,3 @@
+all:
+	echo Compiling $(CLION_EXE_DIR)/$@ ...
+	gcc -g -std=c99 -Wall -Wpedantic -o a2 main.c
