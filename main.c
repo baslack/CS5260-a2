@@ -24,13 +24,15 @@
 #define rand_comp() ((double)(((double)random())/RAND_MAX) * 2.0 - 1.0)
 #define dist_sq(x, y) (pow(x, 2) + pow(y, 2))
 #define toss() ((dist_sq(rand_comp(), rand_comp()) <= 1) ? 1 : 0)
-#define pi(hits, max_toss) (4*((double)(hits)/(max_toss)))
+#define pi(hits, max_toss) (4.0*((double)(hits)/(max_toss)))
 
 //double rand_comp(void);
 //double dist_sq(double, double);
 //int toss(void);
 
 long long int do_some_tosses(long long int);
+
+struct timespec diff(struct timespec, struct timespec);
 
 /** Constants **/
 #define DEFUALT_NUM_TOSS 1024
@@ -96,11 +98,11 @@ int main(int argc, char **argv) {
         struct timespec end;
         clock_gettime(CLOCK_REALTIME, &end);
 
-        long elapsed_nanosec = end.tv_nsec - start.tv_nsec;
+        struct timespec elapsed = diff(start, end);
 
         //output pi
-        printf("no_proc: %d, num_toss: %lld, ns: %ld, pi: %f\n",
-               comm_sz, num_toss, elapsed_nanosec, pi(total_hits, num_toss));
+        printf("no_proc: %d, num_toss: %lld, s: %ld, ns: %ld, pi: %.16f\n",
+               comm_sz, num_toss, elapsed.tv_sec, elapsed.tv_nsec, pi(total_hits, num_toss));
     }
 
     //MPI Closure
@@ -116,6 +118,25 @@ long long int do_some_tosses(long long int no_tosses) {
     }
     return hits;
 //        printf("hits: %lld\n",  hits);
+}
+
+/** care of guyretuenberg:
+ * http://www.guyrutenberg.com/2007/09/22/profiling-code-using-clock_gettime/
+ *
+ * @param start
+ * @param end
+ * @return time difference
+ */
+struct timespec diff(struct timespec start, struct timespec end) {
+    struct timespec temp;
+    if ((end.tv_nsec - start.tv_nsec) < 0) {
+        temp.tv_sec = end.tv_sec - start.tv_sec - 1;
+        temp.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
+    } else {
+        temp.tv_sec = end.tv_sec - start.tv_sec;
+        temp.tv_nsec = end.tv_nsec - start.tv_nsec;
+    }
+    return temp;
 }
 
 //inline double rand_comp(void){

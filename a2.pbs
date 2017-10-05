@@ -1,8 +1,6 @@
 #!/bin/sh -login
 #PBS -l mem=1024mb
-#PBS -l nodes=1:ppn=1:student
 #PBS -l walltime=00:10:00
-#PBS -N a2
 #PBS -j oe
 
 #automatically calculate the number of cores
@@ -13,4 +11,4 @@ module load openmpi/gnu/1.7.3
 #cd into our working directory
 cd ~/a2
 
-mpirun -machinefile ${PBS_NODEFILE} -n ${NP} ./a2 -t 2048
+mpirun -machinefile ${PBS_NODEFILE} -n ${NP} ./a2 -t $1
