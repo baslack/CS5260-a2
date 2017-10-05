@@ -1,6 +1,7 @@
 /**
  * Benjamin A. Slack
  * CS 5260
+ * 10.5.2017
  * Assignment #2
  *
  * Description:
@@ -26,10 +27,6 @@
 #define toss() ((dist_sq(rand_comp(), rand_comp()) <= 1) ? 1 : 0)
 #define pi(hits, max_toss) (4.0*((double)(hits)/(max_toss)))
 
-//double rand_comp(void);
-//double dist_sq(double, double);
-//int toss(void);
-
 long long int do_some_tosses(long long int);
 
 struct timespec diff(struct timespec, struct timespec);
@@ -50,7 +47,7 @@ int main(int argc, char **argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-    if (my_rank != 0) {
+    if (my_rank != 0) { // the tossers
         //get the number of tosses from the broadcast
         long long int number_of_tosses_per_process = 0;
         MPI_Bcast(&number_of_tosses_per_process, 1, MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
@@ -61,7 +58,7 @@ int main(int argc, char **argv) {
 
         // send out the hits
         MPI_Reduce(&local_hits, NULL, 1, MPI_LONG_LONG_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    } else {
+    } else { // the aggregator
         //command line parsing
         if (argc > 1) {
             //identify "-t" flag
@@ -110,14 +107,18 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+/**
+ * Performs a given number of tosses at the board
+ * and returns the number of hits
+ * @param no_tosses
+ * @return
+ */
 long long int do_some_tosses(long long int no_tosses) {
     long long int hits = 0;
     for (long long int i = 0; i < no_tosses; i++) {
         hits += toss();
-//            printf("rand_comp: %f\n", rand_comp());
     }
     return hits;
-//        printf("hits: %lld\n",  hits);
 }
 
 /** care of guyretuenberg:
@@ -138,15 +139,3 @@ struct timespec diff(struct timespec start, struct timespec end) {
     }
     return temp;
 }
-
-//inline double rand_comp(void){
-//    return (double)(random()/RAND_MAX) * 2.0 - 1.0;
-//}
-
-//inline double dist_sq(double x, double y){
-//    return pow(x, 2) + pow(y, 2);
-//}
-
-//inline int toss(void){
-//    return (dist_sq(rand_comp(), rand_comp()) <= 1) ? 1 : 0;
-//}
