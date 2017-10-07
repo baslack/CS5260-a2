@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
         struct timespec elapsed = diff(start, end);
 
         //output pi
-        printf("no_proc: %d, num_toss: %lld, s: %ld, ns: %ld, pi: %.16f\n",
+        printf("no_proc: %d, num_toss: %lld, wall-time: %ld.%ld, pi: %.16f\n",
                comm_sz, num_toss, elapsed.tv_sec, elapsed.tv_nsec, pi(total_hits, num_toss));
     }
 

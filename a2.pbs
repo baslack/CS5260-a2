@@ -11,4 +11,4 @@ module load openmpi/gnu/1.7.3
 #cd into our working directory
 cd ~/a2
 
-mpirun -machinefile ${PBS_NODEFILE} -n ${NP} ./a2 -t $1
+mpirun -quiet -machinefile ${PBS_NODEFILE} -n ${NP} ./a2 -t $1
