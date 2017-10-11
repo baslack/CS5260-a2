@@ -10,7 +10,7 @@ do
 	#one node batches
 	for i in 1 2 4 8;
 	do
-		for j in 1000 100000 1000000 100000000 500000000 1000000000 5000000000 10000000000;
+		for j in 78125000 156250000 312500000 625000000 1250000000 2500000000 5000000000 10000000000;
 		do
 			qsub -l nodes=1:ppn=$i -F "$j" a2.pbs;
 		done
@@ -24,7 +24,7 @@ do
 	#breaking it into two batches with a pause seems to help
 	for i in 16;
 	do
-		for j in 1000 100000 1000000 100000000;
+		for j in 78125000 156250000 312500000 625000000;
 		do
 			qsub -l nodes=1:ppn=$i -F "$j" a2.pbs;
 		done
@@ -35,7 +35,7 @@ do
 	done
 	for i in 16;
 	do
-		for j in 500000000 1000000000 5000000000 10000000000;
+		for j in 1250000000 2500000000 5000000000 10000000000;
 		do
 			qsub -l nodes=1:ppn=$i -F "$j" a2.pbs;
 		done
@@ -48,7 +48,7 @@ do
 	#4 node batches
 	for i in 2 4;
 	do
-		for j in 1000 100000 1000000 100000000 500000000 1000000000 5000000000 10000000000;
+		for j in 78125000 156250000 312500000 625000000 1250000000 2500000000 5000000000 10000000000;
 		do
 			qsub -l nodes=$i:ppn=16 -F "$j" a2.pbs;
 		done
